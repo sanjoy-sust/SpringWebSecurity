@@ -1,0 +1,55 @@
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:security="http://www.springframework.org/schema/security"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+        http://www.springframework.org/schema/security
+        http://www.springframework.org/schema/security/spring-security-3.2.xsd">
+
+    <http auto-config="true">
+        <intercept-url pattern="/rest/**" access="ROLE_ADMIN" />
+        <form-login
+                login-page="/login"
+                default-target-url="/"
+                authentication-failure-url="/login?error"
+                username-parameter="username"
+                password-parameter="password" />
+        <logout logout-success-url="/login?logout" />
+        <!-- enable csrf protection -->
+        <csrf/>
+    </http>
+<!--
+
+    <security:http pattern="/admin/"
+                   authentication-manager-ref="authenticationManager" entry-point-ref="restServicesEntryPoint"
+                   create-session="stateless">
+        <custom-filter ref="restServicesFilter"
+                                before="PRE_AUTH_FILTER"/>
+    </security:http>
+
+    &lt;!&ndash; Entry point for REST service. &ndash;&gt;
+    <beans:bean id="restServicesEntryPoint"
+                class="com.konasl.security.RestAuthenticationEntryPoint"/>
+
+    &lt;!&ndash; Filter for REST services. &ndash;&gt;
+    <beans:bean id="restServicesFilter"
+                class="com.konasl.security.RestUsernamePasswordAuthenticationFilter">
+        <beans:property name="postOnly" value="false"/>
+        <beans:property name="authenticationManager" ref="authenticationManager"/>
+        <beans:property name="authenticationSuccessHandler" ref="restServicesSuccessHandler"/>
+    </beans:bean>
+
+    &lt;!&ndash; A handler for successful REST service authentication. &ndash;&gt;
+    <beans:bean id="restServicesSuccessHandler"
+                class="com.konasl.security.RestAuthenticationSuccessHandler"/>
+-->
+
+    <!--Basic Authentication-->
+    <authentication-manager alias="authenticationManager">
+        <authentication-provider user-service-ref="customUserDetailsService">
+            <password-encoder hash="plaintext">
+            </password-encoder></authentication-provider>
+    </authentication-manager>
+
+</beans:beans>
